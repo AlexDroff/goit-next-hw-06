@@ -1,8 +1,9 @@
+"use client";
+
 import type { FC } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { NoteTag } from "../../types/note";
 import { createNote } from "@/lib/api";
 import type { CreateNotePayload } from "@/lib/api";
 import styles from "./NoteForm.module.css";
@@ -28,14 +29,14 @@ const NoteForm: FC<NoteFormProps> = ({ onClose }) => {
       .max(50, "Title cannot exceed 50 characters")
       .required("Please provide a title"),
     content: Yup.string().max(500, "Content cannot exceed 500 characters"),
-    tag: Yup.mixed<NoteTag>()
+    tag: Yup.string()
       .oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"])
       .required("Please select a tag"),
   });
 
   return (
     <Formik
-      initialValues={{ title: "", content: "", tag: "Todo" as NoteTag }}
+      initialValues={{ title: "", content: "", tag: "Todo" }}
       validationSchema={validationSchema}
       onSubmit={(values, { setSubmitting }) => {
         mutation.mutate(values, {
