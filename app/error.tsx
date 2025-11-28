@@ -2,19 +2,19 @@
 
 import { useEffect } from "react";
 
-interface NoteErrorProps {
+interface NotesErrorProps {
   error: Error;
   reset: () => void;
 }
 
-export default function NoteError({ error, reset }: NoteErrorProps) {
+export default function NotesError({ error, reset }: NotesErrorProps) {
   useEffect(() => {
-    console.error("Note details error:", error);
+    console.error("Notes page error:", error);
   }, [error]);
 
   return (
     <div>
-      <p>Could not fetch note details. {error.message}</p>
+      <p>Could not fetch the list of notes. {error.message}</p>
       <button onClick={reset}>Try again</button>
     </div>
   );

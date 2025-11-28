@@ -1,39 +1,29 @@
 "use client";
 
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  DehydratedState,
-  hydrate,
-} from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchNotes, deleteNote } from "@/lib/api";
 import type { FetchNotesResponse } from "@/lib/api";
 import { useState } from "react";
+import { useDebounce } from "use-debounce";
 import NoteList from "@/components/Note/NoteList";
 import SearchBox from "@/components/Note/SearchBox";
 import css from "./Notes.client.module.css";
 
-interface NotesClientProps {
-  dehydratedState: DehydratedState;
-}
-
-export default function NotesClient({ dehydratedState }: NotesClientProps) {
+export default function NotesClient() {
   const queryClient = useQueryClient();
-
-  hydrate(queryClient, dehydratedState);
-
   const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 500);
 
   const { data, isLoading, error } = useQuery<FetchNotesResponse>({
-    queryKey: ["notes", search],
-    queryFn: () => fetchNotes({ search }),
+    queryKey: ["notes", { search: debouncedSearch }],
+    queryFn: () => fetchNotes({ search: debouncedSearch }),
+    staleTime: 5000,
   });
 
   const mutation = useMutation({
     mutationFn: (id: string) => deleteNote(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notes", search] });
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
     },
   });
 
@@ -50,7 +40,11 @@ export default function NotesClient({ dehydratedState }: NotesClientProps) {
   return (
     <div className={css.container}>
       <SearchBox value={search} onChange={setSearch} />
-      <NoteList notes={notesToDisplay} onDelete={handleDelete} />
+      {notesToDisplay.length > 0 ? (
+        <NoteList notes={notesToDisplay} onDelete={handleDelete} />
+      ) : (
+        !isLoading && <p>No notes found.</p>
+      )}
     </div>
   );
 }

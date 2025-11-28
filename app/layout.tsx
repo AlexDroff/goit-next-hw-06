@@ -1,12 +1,7 @@
+import TanstackProvider from "@/components/TanStackProvider/TanStackProvider";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
-import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
 import "./globals.css";
-
-export const metadata = {
-  title: "NoteHub",
-  description: "Manage your personal notes efficiently",
-};
 
 export default function RootLayout({
   children,
@@ -15,12 +10,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <TanStackProvider>
+      <body
+        style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      >
+        <TanstackProvider>
           <Header />
-          {children}
+          <main style={{ flex: 1 }}>{children}</main>
           <Footer />
-        </TanStackProvider>
+        </TanstackProvider>
       </body>
     </html>
   );

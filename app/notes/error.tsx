@@ -1,15 +1,28 @@
+// app/error.tsx
 "use client";
 
-interface NotesErrorProps {
+import { useEffect } from "react";
+
+interface GlobalErrorProps {
   error: Error;
   reset: () => void;
 }
 
-export default function NotesError({ error, reset }: NotesErrorProps) {
+export default function GlobalError({ error, reset }: GlobalErrorProps) {
+  useEffect(() => {
+    console.error("Global error:", error);
+  }, [error]);
+
   return (
-    <div>
-      <p>Could not fetch the list of notes. {error.message}</p>
-      <button onClick={reset}>Try again</button>
+    <div style={{ padding: "2rem", textAlign: "center" }}>
+      <h2>Something went wrong!</h2>
+      <p>{error.message}</p>
+      <button
+        onClick={reset}
+        style={{ marginTop: "1rem", padding: "0.5rem 1rem" }}
+      >
+        Try again
+      </button>
     </div>
   );
 }

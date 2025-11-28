@@ -1,37 +1,17 @@
+// app/notes/NoteDetails.client.tsx
 "use client";
 
-import {
-  useQuery,
-  hydrate,
-  DehydratedState,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 import { fetchNoteById } from "@/lib/api";
 import type { Note } from "@/types/note";
 import css from "./NoteDetails.module.css";
 
 interface NoteDetailsClientProps {
-  dehydratedState: DehydratedState;
   noteId: string;
 }
 
-export default function NoteDetailsClient({
-  dehydratedState,
-  noteId,
-}: NoteDetailsClientProps) {
-  const queryClient = new QueryClient();
-
-  hydrate(queryClient, dehydratedState);
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <NoteDetails noteId={noteId} />
-    </QueryClientProvider>
-  );
-}
-
-function NoteDetails({ noteId }: { noteId: string }) {
+export default function NoteDetailsClient({ noteId }: NoteDetailsClientProps) {
   const {
     data: note,
     isLoading,
@@ -39,7 +19,9 @@ function NoteDetails({ noteId }: { noteId: string }) {
   } = useQuery<Note>({
     queryKey: ["note", noteId],
     queryFn: () => fetchNoteById(noteId),
-    enabled: !!noteId,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
   });
 
   if (isLoading) return <p>Loading, please wait...</p>;
@@ -47,12 +29,17 @@ function NoteDetails({ noteId }: { noteId: string }) {
 
   return (
     <div className={css.container}>
+      <Link href="/notes" className={css.backButton}>
+        ← Back to notes
+      </Link>
       <div className={css.item}>
         <div className={css.header}>
           <h2>{note.title}</h2>
         </div>
         <p className={css.content}>{note.content}</p>
-        <p className={css.date}>{note.createdAt}</p>
+        <p className={css.date}>
+          Created: {new Date(note.createdAt).toLocaleDateString()}
+        </p>
       </div>
     </div>
   );

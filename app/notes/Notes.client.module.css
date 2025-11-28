@@ -1,8 +1,15 @@
 .container {
-  max-width: 800px;
+  max-width: 1140px;
   margin: 32px auto;
   padding: 16px;
   display: flex;
   flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 16px;
 }
