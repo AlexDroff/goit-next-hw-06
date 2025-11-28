@@ -1,4 +1,3 @@
-// app/notes/NoteDetails.client.tsx
 "use client";
 
 import Link from "next/link";
