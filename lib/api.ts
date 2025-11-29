@@ -26,6 +26,7 @@ export interface FetchNotesResponse {
 export interface CreateNotePayload {
   title: string;
   content?: string;
+  tag: string;
 }
 
 export const fetchNotes = async (params: FetchNotesParams) => {
