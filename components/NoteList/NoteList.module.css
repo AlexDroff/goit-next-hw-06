@@ -47,7 +47,7 @@
 }
 
 .viewDetails {
-  color: #7c7c7c;
+  color: #005fec;
   border: none;
   font-size: 0.9rem;
   font-weight: 500;
@@ -62,7 +62,7 @@
 
 .deleteBtn {
   padding: 4px 8px;
-  background-color: #7c7c7c;
+  background-color: #c43131;
   color: #fff;
   border-radius: 4px;
   cursor: pointer;
