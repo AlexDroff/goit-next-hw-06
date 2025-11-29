@@ -79,3 +79,13 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.badge {
+  background-color: #6dc6fa21;
+  border-radius: 12px;
+  width: fit-content;
+  padding: 4px 8px;
+  font-size: 1rem;
+  color: rgb(46, 52, 61);
+  margin-bottom: 8px;
+}

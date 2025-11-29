@@ -22,3 +22,36 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+.pagination {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.pageButton,
+.currentPage {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.currentPage {
+  background: #0070f3;
+  color: white;
+  border-color: #0070f3;
+  cursor: default;
+}
+
+.pageButton:hover:not(:disabled) {
+  background: #f0f0f0;
+}
+
+.pageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

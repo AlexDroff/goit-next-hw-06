@@ -1,13 +1,13 @@
 "use client";
 
-import type { ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 import styles from "./SearchBox.module.css";
 
 interface SearchBoxProps {
   onChange: (value: string) => void;
 }
 
-const SearchBox = ({ onChange }: SearchBoxProps) => {
+export default function SearchBox({ onChange }: SearchBoxProps) {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
@@ -20,6 +20,4 @@ const SearchBox = ({ onChange }: SearchBoxProps) => {
       onChange={handleChange}
     />
   );
-};
-
-export default SearchBox;
+}

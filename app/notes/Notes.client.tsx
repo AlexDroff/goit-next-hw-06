@@ -18,9 +18,16 @@ export default function NotesClient() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [debouncedSearch] = useDebounce(search, 500);
 
+  const perPage = 12;
+
   const { data, isLoading, error } = useQuery<FetchNotesResponse>({
     queryKey: ["notes", { search: debouncedSearch, page }],
-    queryFn: () => fetchNotes({ search: debouncedSearch, page, perPage: 12 }),
+    queryFn: () =>
+      fetchNotes({
+        search: debouncedSearch,
+        page,
+        perPage,
+      }),
     staleTime: 5000,
     placeholderData: (prev) => prev,
   });
@@ -33,21 +40,49 @@ export default function NotesClient() {
     },
   });
 
-  const handleCreate = (values: CreateNotePayload) => {
-    createMutation.mutate(values);
-  };
-
   if (isLoading) return <p>Loading, please wait...</p>;
   if (error)
     return <p>Could not fetch the list of notes. {(error as Error).message}</p>;
 
   const notes = data?.notes || [];
-  const totalPages = data?.totalPages || 1;
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(1);
+  };
 
   return (
     <div className={css.container}>
       <div className={css.header}>
-        <SearchBox onChange={setSearch} />
+        <SearchBox onChange={handleSearchChange} />
+
+        <div className={css.pagination}>
+          {page > 1 && (
+            <button onClick={() => setPage(page - 1)} className={css.navButton}>
+              ←
+            </button>
+          )}
+
+          {[...Array(page + (notes.length === perPage ? 1 : 0))].map((_, i) => {
+            const p = i + 1;
+            return (
+              <button
+                key={p}
+                className={p === page ? css.currentPage : css.pageButton}
+                onClick={() => setPage(p)}
+              >
+                {p}
+              </button>
+            );
+          })}
+
+          {notes.length === perPage && (
+            <button onClick={() => setPage(page + 1)} className={css.navButton}>
+              →
+            </button>
+          )}
+        </div>
+
         <button
           className={css.createButton}
           onClick={() => setIsModalOpen(true)}
@@ -58,26 +93,11 @@ export default function NotesClient() {
 
       <NoteList notes={notes} />
 
-      {totalPages > 1 && (
-        <div className={css.pagination}>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <button
-              key={p}
-              onClick={() => setPage(p)}
-              disabled={p === page}
-              className={p === page ? css.currentPage : ""}
-            >
-              {p}
-            </button>
-          ))}
-        </div>
-      )}
-
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
           <NoteForm
             onClose={() => setIsModalOpen(false)}
-            onSubmit={handleCreate}
+            onSubmit={(values) => createMutation.mutate(values)}
           />
         </Modal>
       )}

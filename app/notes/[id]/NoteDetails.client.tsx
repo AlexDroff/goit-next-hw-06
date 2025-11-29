@@ -49,6 +49,7 @@ export default function NoteDetailsClient() {
       <div className={css.item}>
         <div className={css.header}>
           <h2>{note.title}</h2>
+          <span className={css.badge}>{note.tag}</span>
         </div>
         <p className={css.content}>{note.content}</p>
         <p className={css.date}>
