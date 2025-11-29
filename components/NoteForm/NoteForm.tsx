@@ -1,27 +1,18 @@
+"use client";
+
 import type { FC } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { NoteTag } from "../../types/note";
-import { createNote } from "@/lib/api";
+import type { NoteTag } from "@/types/note";
 import type { CreateNotePayload } from "@/lib/api";
 import styles from "./NoteForm.module.css";
 
 interface NoteFormProps {
   onClose: () => void;
+  onSubmit: (values: CreateNotePayload) => void;
 }
 
-const NoteForm: FC<NoteFormProps> = ({ onClose }) => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: (values: CreateNotePayload) => createNote(values),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notes"] });
-      onClose();
-    },
-  });
-
+const NoteForm: FC<NoteFormProps> = ({ onClose, onSubmit }) => {
   const validationSchema = Yup.object({
     title: Yup.string()
       .min(3, "Title must be at least 3 characters")
@@ -38,9 +29,8 @@ const NoteForm: FC<NoteFormProps> = ({ onClose }) => {
       initialValues={{ title: "", content: "", tag: "Todo" as NoteTag }}
       validationSchema={validationSchema}
       onSubmit={(values, { setSubmitting }) => {
-        mutation.mutate(values, {
-          onSettled: () => setSubmitting(false),
-        });
+        onSubmit(values);
+        setSubmitting(false);
       }}
     >
       {({ isSubmitting }) => (
@@ -103,15 +93,11 @@ const NoteForm: FC<NoteFormProps> = ({ onClose }) => {
             <button
               type="submit"
               className={styles.submitButton}
-              disabled={isSubmitting || mutation.status === "pending"}
+              disabled={isSubmitting}
             >
-              {mutation.status === "pending" ? "Creating..." : "Create note"}
+              Create note
             </button>
           </div>
-
-          {mutation.status === "error" && (
-            <p className={styles.error}>Error creating note</p>
-          )}
         </Form>
       )}
     </Formik>

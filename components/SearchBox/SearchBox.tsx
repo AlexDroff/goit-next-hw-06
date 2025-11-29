@@ -4,11 +4,10 @@ import type { ChangeEvent } from "react";
 import styles from "./SearchBox.module.css";
 
 interface SearchBoxProps {
-  value: string;
   onChange: (value: string) => void;
 }
 
-const SearchBox = ({ value, onChange }: SearchBoxProps) => {
+const SearchBox = ({ onChange }: SearchBoxProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
@@ -18,7 +17,6 @@ const SearchBox = ({ value, onChange }: SearchBoxProps) => {
       className={styles.input}
       type="text"
       placeholder="Search notes"
-      value={value}
       onChange={handleChange}
     />
   );
