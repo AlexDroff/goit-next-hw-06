@@ -5,8 +5,8 @@ import { fetchNotes, deleteNote } from "@/lib/api";
 import type { FetchNotesResponse } from "@/lib/api";
 import { useState } from "react";
 import { useDebounce } from "use-debounce";
-import NoteList from "@/components/Note/NoteList";
-import SearchBox from "@/components/Note/SearchBox";
+import NoteList from "@/components/NoteList/NoteList";
+import SearchBox from "@/components//SearchBox/SearchBox";
 import css from "./Notes.client.module.css";
 
 export default function NotesClient() {
